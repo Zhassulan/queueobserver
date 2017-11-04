@@ -15,8 +15,9 @@ public class DatabaseManager {
 	
 	private static volatile DatabaseManager _instance = null;
 	private static SqlSessionFactory sqlSessionFactory;
-	private static TicketMapper TicketMapper;
 	private static ServiceMapper ServiceMapper;
+	private static TicketMapper TicketMapper;
+	private static TokenMapper TokenMapper;
 	private static Reader reader = null;
 	
 	static {
@@ -75,6 +76,19 @@ public class DatabaseManager {
 			App.logger.error(ex.getMessage(), ex);
 		}	
 		return tickets;
+	}
+	
+	public List<Token> getByTicketId(Integer ticket_id)	{
+		List <Token> tokens = null;
+		try	(SqlSession session = sqlSessionFactory.openSession())	{
+			TokenMapper = session.getMapper(TokenMapper.class);
+			tokens = TokenMapper.getByTicketId(ticket_id);
+		}
+		catch	(Exception ex)
+		{
+			App.logger.error(ex.getMessage(), ex);
+		}	
+		return tokens;
 	}
 	
 	public List<Ticket> GetTicketByLogin(String login)	{
